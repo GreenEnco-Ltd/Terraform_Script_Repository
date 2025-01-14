@@ -4,10 +4,11 @@ resource "aws_instance" "Staging_instance" {
   instance_type               = var.instance_type_value # Change to your desired instance type
   subnet_id                   = var.public_subnet_id_value
   associate_public_ip_address = true         # Enable a public IP
-  key_name                    = aws_key_pair.key_pair.key_name # Change to your key pair name
+  key_name                    = var.key_name # Change to your key pair name
   availability_zone           = var.availability_zone
   count                       = var.instance_count
   vpc_security_group_ids      = [aws_security_group.Staging_security_group.id]
+  tenancy                     = var.instance_tenancy    # Specify dedicated tenancy
   # Use the user_data variable
   # user_data = var.user_data
 
@@ -16,15 +17,28 @@ resource "aws_instance" "Staging_instance" {
     volume_type = "gp2"
   }
 
-  # Specify dedicated tenancy for the instance
-  placement {
-    tenancy = "dedicated"  # Dedicated tenancy for the instance
-  }
+
 
   tags = {
     Name = "RI-GreenEnco_Staging_Server${count.index}"
   }
 }
+
+# # RSA key of size 4096 bits
+# resource "tls_private_key" "rsa-4096-example" {
+#   algorithm = "RSA"
+#   rsa_bits  = 4096
+# }
+
+# resource "aws_key_pair" "key_pair" {
+#   key_name   = var.key_name
+#   public_key = tls_private_key.rsa-4096-example.public_key_openssh
+# }
+
+# resource "local_file" "private_key" {
+#   content = tls_private_key.rsa-4096-example.private_key_pem
+#   filename = var.key_name
+# }
 
 
 # Create a security group

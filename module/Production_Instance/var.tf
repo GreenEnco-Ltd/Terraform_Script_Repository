@@ -28,3 +28,7 @@ variable "user_data" {
   type        = string
   default     = ""
 }
+
+variable "instance_tenancy" {
+    description = "The tenancy of the instance (e.g., default, dedicated, host)"
+}

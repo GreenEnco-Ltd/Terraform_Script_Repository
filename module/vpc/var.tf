@@ -3,7 +3,7 @@ variable "vpc_id" {
 }
 
 variable "instance_tenancy" {
-    description = "VPC instance_tenancy Type"
+    description = "The tenancy of the instance (e.g., default, dedicated, host)"
 }
 
 variable "public_subnet_id_value" {

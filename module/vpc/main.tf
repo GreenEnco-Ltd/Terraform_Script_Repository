@@ -42,7 +42,7 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_eip" "eip" {
-    vpc  = true
+    domain = "vpc"
 
   # Optional: Associate tags with the Elastic IP
   tags = {

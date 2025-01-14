@@ -8,6 +8,7 @@ resource "aws_instance" "Development_Instance" {
   availability_zone           = var.availability_zone
   count                       = var.instance_count
   vpc_security_group_ids      = [aws_security_group.Development_security_group.id]
+  tenancy                     = var.instance_tenancy    # Specify dedicated tenancy
   # Use the user_data variable
   # user_data = var.user_data
 
@@ -16,10 +17,6 @@ resource "aws_instance" "Development_Instance" {
     volume_type = "gp3"
   }
 
-  # Specify dedicated tenancy for the instance
-  placement {
-    tenancy = "dedicated" # Dedicated tenancy for the instance
-  }
 
   tags = {
     Name = "RI-GreenEnco_Development_Server${count.index}"

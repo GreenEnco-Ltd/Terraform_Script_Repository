@@ -7,7 +7,7 @@ module "vpc" {
   public_subnet_id_value  = "10.0.0.0/28"
   availability_zone       = "eu-north-1a"
   private_subnet_id_value = "10.0.0.16/28"
-  availability_zone1       = "eu-north-1b"
+  availability_zone1      = "eu-north-1b"
 }
 
 
@@ -15,8 +15,9 @@ module "ec2_development" {
   source = "./module/Development_Instance"
 
   # Pass variables to EC2 module
-  ami_value              = "ami-07a0715df72e58928" # data.aws_ami.ubuntu_24_arm.id                            
+  ami_value              = "ami-075449515af5df0d1" # data.aws_ami.ubuntu_24_arm.id                            
   instance_type_value    = "t3.large"
+  instance_tenancy       = "dedicated"
   key_name               = "GreenEnco_Key.pem"
   instance_count         = "1"
   public_subnet_id_value = module.vpc.public_subnet_id
@@ -30,7 +31,7 @@ resource "null_resource" "name" {
     type        = "ssh"
     user        = "ubuntu"
     private_key = file(var.private_key_path)
-    host = module.ec2.public_ip[0]
+    host        = module.ec2_development.public_ip[0]
   }
 
   provisioner "file" {
@@ -59,30 +60,31 @@ resource "null_resource" "name" {
 }
 
 
-module "ec2_staging" {
-  source = "./module/Staging_Instance"
+# module "ec2_staging" {
+#   source = "./module/Staging_Instance"
 
-  # Pass variables to EC2 module
-  ami_value              = "ami-07a0715df72e58928" # data.aws_ami.ubuntu_24_arm.id                            
-  instance_type_value    = "t3.large"
-  key_name               = "GreenEnco_Key.pem"
-  instance_count         = "1"
-  public_subnet_id_value = module.vpc.public_subnet_id
-  availability_zone      = "eu-north-1b"
-  vpc_id                 = module.vpc.vpc_id
-}
+#   # Pass variables to EC2 module
+#   ami_value              = "ami-07a0715df72e58928" # data.aws_ami.ubuntu_24_arm.id                            
+#   instance_type_value    = "t3.large"
+#   instance_tenancy       = "dedicated"
+#   key_name               = var.private_key_path
+#   instance_count         = "1"
+#   public_subnet_id_value = module.vpc.public_subnet_id
+#   availability_zone      = "eu-north-1a"
+#   vpc_id                 = module.vpc.vpc_id
+# }
 
 
-module "ec2_Production" {
-  source = "./module/Production_Instance"
+# module "ec2_Production" {
+#   source = "./module/Production_Instance"
 
-  # Pass variables to EC2 module
-  ami_value              = "ami-07a0715df72e58928" # data.aws_ami.ubuntu_24_arm.id                            
-  instance_type_value    = "t3.large"
-  key_name               = "GreenEnco_Key.pem"
-  instance_count         = "1"
-  private_subnet_id_value = module.vpc.private_subnet_id
-  availability_zone      = "eu-north-1b"
-  vpc_id                 = module.vpc.vpc_id
-}
-
+#   # Pass variables to EC2 module
+#   ami_value               = "ami-07a0715df72e58928" # data.aws_ami.ubuntu_24_arm.id                            
+#   instance_type_value     = "t3.large"
+#   instance_tenancy        = "dedicated"
+#   key_name                = var.private_key_path
+#   instance_count          = "1"
+#   private_subnet_id_value = module.vpc.private_subnet_id
+#   availability_zone       = "eu-north-1b"
+#   vpc_id                  = module.vpc.vpc_id
+# }
